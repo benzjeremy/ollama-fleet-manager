@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self';" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>ollama-fleet-manager – Intelligenter KI-Modell-Router &amp; OOM-Schutz für Ollama</title>
+  <meta name="description" content="Dynamische Hardware-Telemetrie (CPU, RAM, GPU-VRAM), automatische Modell-Allokation für Ollama und kompromisslose Zero-Dummy-Security in Go.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="index.html" class="brand-link">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <span>ollama-fleet-manager</span>
+        <span class="brand-ver">v1.0</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="https://benzjeremy.github.io/" class="nav-back">← benzjeremy.github.io</a>
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="#install">Installation</a>
+        <a href="wiki/">📖 Web-Wiki</a>
+        <a href="#about">Über mich</a>
+        <a href="https://github.com/benzjeremy/ollama-fleet-manager" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-glow"></div>
+    <div class="hero-container">
+      <div class="hero-badges">
+        <span class="badge badge-primary">v1.0 [Major]</span>
+        <span class="badge badge-secondary">★ Go 1.22</span>
+        <span class="badge badge-secondary">🛡️ Zero-Dummy-Security</span>
+        <span class="badge badge-secondary">⚖️ GNU GPL-3.0</span>
+      </div>
+
+      <h1 class="hero-title">
+        Intelligenter Modell-Router &amp;<br>
+        <span class="gradient-text">OOM-Schutz für Ollama</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Dynamische Hardware-Telemetrie (CPU, RAM, GPU-VRAM), automatische Modell-Allokation nach Einsatzzweck (Coding, Writing, Reasoning, Vision) und militärisch gehärtete lokale Schnittstellen in purem Go.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#download" class="btn btn-primary">
+          <span>📦 Release v1.0 herunterladen</span>
+        </a>
+        <a href="wiki/" class="btn btn-secondary">
+          <span>📖 Web-Wiki &amp; API-Handbuch</span>
+        </a>
+      </div>
+
+      <!-- Quick Command Box -->
+      <div class="quick-cmd-box">
+        <code>go install github.com/benzjeremy/ollama-fleet-manager@latest</code>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('go install github.com/benzjeremy/ollama-fleet-manager@latest'); this.innerText='Kopiert!'; setTimeout(()=>this.innerText='Kopieren', 2000)">Kopieren</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section" id="features">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">Architektur &amp; Fähigkeiten</span>
+        <h2 class="section-title">Entwickelt für maximale Effizienz &amp; Stabilität</h2>
+        <p class="section-desc">Keine abgestürzten Produktionsserver mehr durch unüberlegte LLM-Parallelstarts. Der Fleet Manager optimiert jede Abfrage.</p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <article class="feature-card">
+          <div class="f-icon">📊</div>
+          <h3>Hardware-Telemetrie-Sensoren</h3>
+          <p>Kontinuierliche Überwachung von Host-RAM, CPU-Last und diskreten NVIDIA GPU-VRAMs in Sub-Millisekunden ohne merkliche Prozessorlast.</p>
+        </article>
+
+        <!-- Feature 2 -->
+        <article class="feature-card">
+          <div class="f-icon">🧠</div>
+          <h3>Intelligente Rule Engine</h3>
+          <p>Wählt automatisch das ideale Modell für den jeweiligen Einsatzzweck (Coding, Textanalyse, formale Logik, Vision) basierend auf verfügbarem VRAM.</p>
+        </article>
+
+        <!-- Feature 3 -->
+        <article class="feature-card">
+          <div class="f-icon">🛡️</div>
+          <h3>Proaktiver Anti-OOM Schutz</h3>
+          <p>Verhindert Kernel-Abstürze durch den OOM-Killer. Erkennt Speicherdruck (>85% RAM) und schaltet automatisch auf leichtgewichtige Fallback-Modelle um.</p>
+        </article>
+
+        <!-- Feature 4 -->
+        <article class="feature-card">
+          <div class="f-icon">🔐</div>
+          <h3>Zero-Dummy-Security</h3>
+          <p>Verbindliche Produktionssicherheit: Strikte 127.0.0.1 Bindung, Anti-DNS-Rebinding (`Host`-Prüfung), Anti-CSRF (`Origin`-Prüfung) und 32-Byte CSPRNG Token.</p>
+        </article>
+
+        <!-- Feature 5 -->
+        <article class="feature-card">
+          <div class="f-icon">⚡</div>
+          <h3>Latenzfreie REST-API</h3>
+          <p>Ultraschnelle Endpunkte für Live-Metriken, Modellstatus, dynamische Allokation (`/models/select`) und gezielte Speicherfreigabe (`/models/evict`).</p>
+        </article>
+
+        <!-- Feature 6 -->
+        <article class="feature-card">
+          <div class="f-icon">💾</div>
+          <h3>AES-256-GCM Vault</h3>
+          <p>Alle persistenten Konfigurationen und Audit-Logs werden im lokalen Tresor mit AES-256-GCM und PBKDF2 (100.000 Runden) verschlüsselt gespeichert.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download & Installation Section -->
+  <section class="section" id="download" style="background: var(--bg-surface);">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">Download &amp; Setup</span>
+        <h2 class="section-title">Echte Multi-Platform Binaries</h2>
+        <p class="section-desc">Standalone, schlank und ohne externe Abhängigkeiten sofort einsatzbereit.</p>
+      </div>
+
+      <div class="install-grid" id="install">
+        <!-- Linux Card -->
+        <article class="install-card">
+          <div class="install-card-header">
+            <div class="install-card-title">
+              <span>🐧</span>
+              <span>Linux (x86_64)</span>
+            </div>
+            <span class="brand-ver">v1.0</span>
+          </div>
+          <pre><code># Archiv herunterladen &amp; entpacken
+tar -xzf ollama-fleet-manager-v1.0-linux.tar.gz
+sudo cp ollama-fleet-manager /usr/local/bin/
+
+# Starten mit individuellem Port
+ollama-fleet-manager --port=8080</code></pre>
+          <a href="https://github.com/benzjeremy/ollama-fleet-manager/releases/download/v1.0/ollama-fleet-manager-v1.0-linux.tar.gz" class="btn btn-primary" style="margin-top:auto;">
+            <span>⬇️ Linux-Paket (.tar.gz)</span>
+          </a>
+        </article>
+
+        <!-- Windows Card -->
+        <article class="install-card">
+          <div class="install-card-header">
+            <div class="install-card-title">
+              <span>🪟</span>
+              <span>Windows (x86_64)</span>
+            </div>
+            <span class="brand-ver">v1.0</span>
+          </div>
+          <pre><code># Archiv entpacken &amp; in PowerShell starten
+Expand-Archive ollama-fleet-manager-v1.0-windows.zip
+cd ollama-fleet-manager
+.\ollama-fleet-manager.exe --port=8080</code></pre>
+          <a href="https://github.com/benzjeremy/ollama-fleet-manager/releases/download/v1.0/ollama-fleet-manager-v1.0-windows.zip" class="btn btn-secondary" style="margin-top:auto;">
+            <span>⬇️ Windows-Paket (.zip)</span>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mitwirkende & Lizenz Section -->
+  <section class="section" id="about">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">Projekt-Governance</span>
+        <h2 class="section-title">Mitwirkende &amp; Open-Source-Freiheit</h2>
+      </div>
+
+      <div class="about-grid">
+        <!-- Box 1: Autor -->
+        <article class="about-card">
+          <div class="author-profile">
+            <div class="author-avatar">JB</div>
+            <div class="author-meta">
+              <h4>Jeremy Benz</h4>
+              <p>17-jähriger Go Systems Developer aus NRW, Deutschland</p>
+            </div>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 16px;">
+            Fokus auf radikal native Architekturen, echte Kryptografie und maximale Ressourceneffizienz ohne Framework-Ballast.
+          </p>
+          <div class="ai-badges">
+            <span class="ai-chip">Lead Developer: @benzjeremy</span>
+            <span class="ai-chip">Pair Programming: Google Antigravity</span>
+            <span class="ai-chip">© 2026 Jeremy Benz</span>
+          </div>
+        </article>
+
+        <!-- Box 2: Lizenz -->
+        <article class="about-card">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; display:flex; align-items:center; gap:8px;">
+            <span>⚖️</span>
+            <span>GNU General Public License v3.0</span>
+          </h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px;">
+            Dieses Projekt ist freie Software. Du hast das Recht, den Quellcode einzusehen, zu studieren, zu verändern und weiterzugeben.
+          </p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="https://github.com/benzjeremy/ollama-fleet-manager/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">
+              <span>📄 Offizielle Lizenz</span>
+            </a>
+            <a href="https://github.com/benzjeremy/ollama-fleet-manager" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">
+              <span>💻 Quellcode auf GitHub</span>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-links">
+        <a href="wiki/">📖 Web-Wiki</a>
+        <a href="https://github.com/benzjeremy/ollama-fleet-manager" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/benzjeremy/ollama-fleet-manager/releases" target="_blank" rel="noopener noreferrer">Releases</a>
+        <a href="https://github.com/benzjeremy/ollama-fleet-manager/issues" target="_blank" rel="noopener noreferrer">Fehler melden</a>
+        <a href="https://github.com/benzjeremy/ollama-fleet-manager/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Lizenz (GPL-3.0)</a>
+        <a href="https://benzjeremy.github.io/impressum.html" target="_blank" rel="noopener noreferrer">Impressum</a>
+        <a href="https://benzjeremy.github.io/datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+      </div>
+      <div class="footer-copy">
+        © 2026 Jeremy Benz · Alle Rechte vorbehalten
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumentation &amp; API-Referenz – ollama-fleet-manager</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="wiki.css">
+</head>
+<body>
+
+  <div class="wiki-layout">
+    <!-- Sidebar -->
+    <aside class="wiki-sidebar">
+      <a href="../index.html" class="sidebar-brand">
+        <span style="color:var(--accent-primary);">←</span>
+        <span>ollama-fleet-manager</span>
+      </a>
+
+      <div class="sidebar-nav-group">
+        <div class="sidebar-heading">Einführung</div>
+        <ul class="sidebar-links">
+          <li><a href="#uebersicht" class="active">Überblick</a></li>
+          <li><a href="#architektur">Systemarchitektur</a></li>
+          <li><a href="#security">Zero-Dummy-Security</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <div class="sidebar-heading">API-Schnittstellen</div>
+        <ul class="sidebar-links">
+          <li><a href="#api-auth">Authentifizierung</a></li>
+          <li><a href="#api-metrics">GET /metrics</a></li>
+          <li><a href="#api-models">GET /models</a></li>
+          <li><a href="#api-select">POST /models/select</a></li>
+          <li><a href="#api-evict">POST /models/evict</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <div class="sidebar-heading">Betrieb &amp; Wartung</div>
+        <ul class="sidebar-links">
+          <li><a href="#systemd">Systemd Service Setup</a></li>
+          <li><a href="#troubleshooting">Fehlerbehebung</a></li>
+          <li><a href="https://benzjeremy.github.io/impressum.html">Impressum</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Wiki Content -->
+    <main class="wiki-content">
+      <header class="wiki-header">
+        <h1 class="wiki-title">Offizielles Handbuch &amp; API-Referenz</h1>
+        <p class="wiki-subtitle">ollama-fleet-manager v1.0 · Dynamische Allokation &amp; OOM-Schutz für Ollama</p>
+      </header>
+
+      <!-- Overview -->
+      <section id="uebersicht">
+        <h2>Überblick</h2>
+        <p>
+          <strong>ollama-fleet-manager</strong> ist ein hochperformanter Daemon in purem Go, der lokale Ollama-Instanzen überwacht, Systemmetriken (CPU, RAM, GPU-VRAM) kontinuierlich sammelt und für eingehende Task-Anfragen das optimal dimensionierte KI-Modell bereitstellt.
+        </p>
+        <div class="alert-box">
+          <h4>Militärischer Sicherheitsstandard (Zero-Dummy-Security)</h4>
+          <p>Der Daemon bindet sich ausschließlich an <code>127.0.0.1</code>, verlangt ein 32-Byte CSPRNG Token und filtert automatisch Cross-Origin und DNS-Rebinding Angriffe ab.</p>
+        </div>
+      </section>
+
+      <!-- Architecture -->
+      <section id="architektur">
+        <h2>Systemarchitektur</h2>
+        <p>Die Codebasis ist in isolierte Go-Pakete unterteilt:</p>
+        <pre><code>├── hardware/   # Telemetrie-Sensoren (/proc/meminfo, /proc/stat, nvidia-smi)
+├── models/     # Modell-Registry &amp; Hardware-Mindestanforderungen
+├── engine/     # Rule Engine zur OOM-Prävention &amp; Modellauswahl
+├── controller/ # Ollama HTTP-Client (Ping, List, Unload, Pull)
+├── storage/    # AES-256-GCM Vault mit PBKDF2 (100.000 Runden)
+└── api/        # REST-Server mit Anti-CSRF und Anti-DNS-Rebinding</code></pre>
+      </section>
+
+      <!-- Security -->
+      <section id="security">
+        <h2>Zero-Dummy-Security</h2>
+        <p>
+          Im Gegensatz zu vielen ungesicherten KI-Wrappern implementiert dieser Manager kompromisslosen Produktionsschutz:
+        </p>
+        <ul>
+          <li><strong>Anti-DNS-Rebinding:</strong> Der <code>Host</code>-Header muss zwingend <code>127.0.0.1</code> oder <code>localhost</code> entsprechen. Anfragen über fremde Domainnamen werden sofort mit <code>HTTP 403 Forbidden</code> abgewiesen.</li>
+          <li><strong>Anti-CSRF:</strong> Externe Webseiten, die versuchen, über den Browser des Nutzers lokale Modelle zu starten oder zu entladen, werden via <code>Origin</code>-Header-Filterung blockiert.</li>
+          <li><strong>CSPRNG Token:</strong> Jeder geschützte API-Aufruf erfordert das <code>X-API-Token</code>.</li>
+        </ul>
+      </section>
+
+      <!-- API Reference -->
+      <section id="api-auth">
+        <h2>API-Authentifizierung</h2>
+        <p>Füge den Header <code>X-API-Token</code> zu jedem Request hinzu:</p>
+        <pre><code>curl -H "X-API-Token: &lt;dein-token&gt;" http://127.0.0.1:8080/api/v1/metrics</code></pre>
+      </section>
+
+      <section id="api-select">
+        <h2>POST /api/v1/models/select</h2>
+        <p>Ermittelt das ideale Modell für den geforderten Einsatzzweck:</p>
+        <pre><code>POST /api/v1/models/select HTTP/1.1
+Host: 127.0.0.1:8080
+X-API-Token: a9f738...
+Content-Type: application/json
+
+{
+  "category": "coding",
+  "purpose": "High precision syntax refactoring"
+}</code></pre>
+        <p>Antwortbeispiel:</p>
+        <pre><code>{
+  "selected_model": {
+    "id": "qwen2.5-coder:7b",
+    "display_name": "Qwen 2.5 Coder (7B)",
+    "category": "coding",
+    "min_ram_mb": 8192,
+    "min_vram_mb": 6144
+  },
+  "execution_mode": "GPU",
+  "reason": "Selected for high-performance GPU execution (14336 MB VRAM available)",
+  "requires_evict": false,
+  "confidence_score": 0.98
+}</code></pre>
+      </section>
+
+      <section id="api-evict">
+        <h2>POST /api/v1/models/evict</h2>
+        <p>Entlädt Modelle aus dem Arbeitsspeicher, um Platz für speicherintensive Aufgaben zu schaffen:</p>
+        <pre><code>POST /api/v1/models/evict HTTP/1.1
+Host: 127.0.0.1:8080
+X-API-Token: a9f738...
+Content-Type: application/json
+
+{
+  "model_id": "llama3.1:8b"
+}</code></pre>
+      </section>
+
+      <!-- Systemd -->
+      <section id="systemd">
+        <h2>Systemd Service Setup (Linux)</h2>
+        <p>Erstelle die Unit-Datei unter <code>/etc/systemd/system/ollama-fleet-manager.service</code>:</p>
+        <pre><code>[Unit]
+Description=Ollama Fleet Manager
+After=network.target ollama.service
+
+[Service]
+Type=simple
+User=benzj
+ExecStart=/usr/local/bin/ollama-fleet-manager --port=8080
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>
