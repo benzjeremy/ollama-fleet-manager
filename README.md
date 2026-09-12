@@ -5,35 +5,35 @@
 [![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go)](https://go.dev/)
 [![Release](https://img.shields.io/badge/Release-v1.0-f43f5e.svg)](https://github.com/benzjeremy/ollama-fleet-manager/releases/tag/v1.0)
 
-Intelligenter, ressourcenschonender Fleet Manager und dynamischer Modell-Router für [Ollama](https://ollama.com). Entwickelt in purem Go mit Hardware-Telemetrie-Sensoren (CPU, RAM, GPU-VRAM), automatischer OOM-Prävention und kompromissloser **Zero-Dummy-Security**.
+Intelligent, resource-efficient fleet manager and dynamic model router for [Ollama](https://ollama.com). Built in pure Go with hardware telemetry sensors (CPU, RAM, GPU VRAM), automated OOM prevention, and uncompromising **Zero-Dummy-Security**.
 
 ---
 
-## 💡 Warum ollama-fleet-manager?
+## 💡 Why ollama-fleet-manager?
 
-Monolithische KI-Deployments scheitern in der Praxis oft an unvorhersehbaren Speicherengpässen:
-1. **OOM-Crashes (Out of Memory):** Werden große Modelle wie `llama3.1:8b` oder `deepseek-r1:8b` parallel gestartet, killt der Linux-Kernel den Prozess (`OOM-Killer`).
-2. **Ressourcenverschwendung:** Einfache Aufgaben (Textzusammenfassung, Rechtschreibkorrektur) benötigen keine 8B-Parameter und belegen unnötig wertvollen GPU-VRAM.
-3. **Mangelnde Sicherheit lokaler Schnittstellen:** Viele KI-Server binden ungeschützt an `0.0.0.0` oder besitzen keine CSRF- / DNS-Rebinding-Schutzmechanismen.
+Monolithic local AI deployments frequently run into unpredictable memory bottlenecks:
+1. **OOM Crashes (Out of Memory):** When large models like `llama3.1:8b` or `deepseek-r1:8b` are loaded concurrently, the Linux kernel invokes the `OOM-Killer`.
+2. **Resource Waste:** Simple tasks (summaries, proofreading) do not require 8B parameters and unnecessarily consume precious GPU VRAM.
+3. **Insecure Local Endpoints:** Many local AI servers bind exposed to `0.0.0.0` or lack basic CSRF and DNS-rebinding protections.
 
-**ollama-fleet-manager** löst diese Probleme durch eine kontinuierliche Hardware-Überwachung, eine regelbasierte Matching-Engine und kryptografisch abgesicherte lokale Schnittstellen.
+**ollama-fleet-manager** resolves these issues through continuous hardware telemetry, a rules-based model selection engine, and cryptographically secured local APIs.
 
 ---
 
-## 🛡️ Zero-Dummy-Security (Militärischer Standard ab Werk)
+## 🛡️ Zero-Dummy-Security (Production-Grade Defaults)
 
-- 🔒 **Lokale Bindung:** Der Server lauscht ausnahmslos an `127.0.0.1:<port>` (niemals `0.0.0.0`).
-- 🛡️ **Anti-DNS-Rebinding:** Strikte Validierung des HTTP-`Host`-Headers. Fremde Domain-Anfragen werden sofort mit `HTTP 403 Forbidden` abgewiesen.
-- 🚫 **Anti-CSRF:** Prüfung des `Origin`-Headers. Verhindert böswillige API-Trigger aus fremden Browser-Tabs.
-- 🔑 **Kryptografische Token-Authentifizierung:** Jeder API-Aufruf erfordert ein zufälliges 32-Byte CSPRNG-Token (`X-API-Token`).
-- 🔐 **AES-256-GCM & PBKDF2:** Alle persistenten Konfigurationen und Audit-Logs werden im lokalen Tresor mit AES-256-GCM verschlüsselt gespeichert (Schlüsselableitung via PBKDF2 mit **100.000 Iterationen**).
+- 🔒 **Local Binding:** The daemon strictly binds to `127.0.0.1:<port>` (never `0.0.0.0`).
+- 🛡️ **Anti-DNS-Rebinding:** Strict HTTP `Host` header validation rejects foreign hostnames with `HTTP 403 Forbidden`.
+- 🚫 **Anti-CSRF:** Strict `Origin` and `Referer` validation prevents cross-site request forgery attacks from browser tabs.
+- 🔑 **Cryptographic Token Authentication:** Every API request requires a random 32-byte CSPRNG token (`X-API-Token`).
+- 🔐 **AES-256-GCM & PBKDF2:** All persistent configurations and audit logs are stored encrypted with AES-256-GCM (key derivation via PBKDF2 with **100,000 iterations**).
 
 ---
 
 ## 📦 Installation
 
-### 1. Vorab kompilierte Binaries herunterladen
-Lade das passende Archiv aus den [GitHub Releases](https://github.com/benzjeremy/ollama-fleet-manager/releases) herunter:
+### 1. Download Precompiled Binaries
+Download the matching archive from [GitHub Releases](https://github.com/benzjeremy/ollama-fleet-manager/releases):
 
 #### Linux (x86_64):
 ```bash
@@ -43,23 +43,23 @@ ollama-fleet-manager --version
 ```
 
 #### Windows (x86_64):
-Entpacke `ollama-fleet-manager-v1.0-windows.zip` und starte `ollama-fleet-manager.exe`.
+Extract `ollama-fleet-manager-v1.0-windows.zip` and run `ollama-fleet-manager.exe`.
 
-### 2. Installation via Go:
+### 2. Install via Go:
 ```bash
 go install github.com/benzjeremy/ollama-fleet-manager@latest
 ```
 
 ---
 
-## 🚀 Schnellstart
+## 🚀 Quick Start
 
-Starte den Dienst im Terminal:
+Start the daemon in your terminal:
 ```bash
 ollama-fleet-manager --port=8080 --poll-interval=30
 ```
 
-Ausgabe beim Start:
+Console output upon launch:
 ```text
   ___  _ _                        _____ _           _   ___  ___                                  
  / _ \| | |                      |  ___| |         | |  |  \/  |                                  
@@ -83,15 +83,15 @@ Ausgabe beim Start:
 
 ---
 
-## 📡 REST-API Dokumentation
+## 📡 REST API Documentation
 
-Alle Anfragen (außer `/health`) erfordern den Header:
+All requests (except `/health`) require the authentication header:
 ```http
-X-API-Token: <dein-32-byte-token>
+X-API-Token: <your-32-byte-token>
 ```
 
 ### 1. `GET /health`
-Liefert Status, Uptime und Konnektivität zur lokalen Ollama-Instanz.
+Returns service status, uptime, and Ollama connectivity:
 ```json
 {
   "status": "ok",
@@ -104,7 +104,7 @@ Liefert Status, Uptime und Konnektivität zur lokalen Ollama-Instanz.
 ```
 
 ### 2. `GET /api/v1/metrics`
-Liefert die aktuellen Hardware-Telemetriedaten:
+Returns current real-time hardware telemetry:
 ```json
 {
   "timestamp": "2026-09-10T20:45:00Z",
@@ -123,14 +123,14 @@ Liefert die aktuellen Hardware-Telemetriedaten:
 ```
 
 ### 3. `POST /api/v1/models/select`
-Wählt das beste Modell basierend auf der aktuellen Hardware und dem Einsatzzweck:
+Selects optimal model candidate based on active hardware thresholds and request intent:
 ```bash
 curl -X POST http://127.0.0.1:8080/api/v1/models/select \
   -H "X-API-Token: <token>" \
   -H "Content-Type: application/json" \
   -d '{"category": "coding", "purpose": "High-speed code refactoring"}'
 ```
-Antwort:
+Response:
 ```json
 {
   "selected_model": {
@@ -151,7 +151,7 @@ Antwort:
 ```
 
 ### 4. `POST /api/v1/models/evict`
-Entlädt geladene Modelle aus dem VRAM/RAM, um Speicher für dringende Systemprozesse freizugeben:
+Unloads models from memory to release VRAM/RAM for higher-priority system tasks:
 ```bash
 curl -X POST http://127.0.0.1:8080/api/v1/models/evict \
   -H "X-API-Token: <token>" \
@@ -161,15 +161,15 @@ curl -X POST http://127.0.0.1:8080/api/v1/models/evict \
 
 ---
 
-## 👥 Mitwirkende & Credits
+## 👥 Contributors & Credits
 
-- Jeremy Benz ([@benzjeremy](https://github.com/benzjeremy) & [@jbenz1706](https://github.com/jbenz1706)) – Projektgründer & Lead Architect
-- KI-Entwicklungspartner: Google Antigravity
+- Jeremy Benz ([@benzjeremy](https://github.com/benzjeremy)) – Project Founder & Lead Architect
+- AI Development Partner: Google Antigravity
 - © 2026 Jeremy Benz
 
 ---
 
-## 📄 Lizenz
+## 📄 License
 
-Dieses Projekt steht unter der **GNU General Public License, Version 3.0 (GPL-3.0)**.  
-Details siehe [LICENSE](https://github.com/benzjeremy/ollama-fleet-manager/blob/main/LICENSE).
+This project is licensed under the **GNU General Public License, Version 3.0 (GPL-3.0)**.  
+See [LICENSE](LICENSE) for details.
