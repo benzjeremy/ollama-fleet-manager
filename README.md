@@ -3,7 +3,13 @@
 [![CI](https://github.com/benzjeremy/ollama-fleet-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/benzjeremy/ollama-fleet-manager/actions)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://github.com/benzjeremy/ollama-fleet-manager/blob/main/LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go)](https://go.dev/)
-[![Release](https://img.shields.io/badge/Release-v1.0-f43f5e.svg)](https://github.com/benzjeremy/ollama-fleet-manager/releases/tag/v1.0)
+[![Release](https://img.shields.io/badge/Release-v1.0%20[Pre--Release]-f43f5e.svg)](https://github.com/benzjeremy/ollama-fleet-manager/releases/tag/v1.0)
+[![Status: Pre-Release](https://img.shields.io/badge/Status-Pre--Release%20%2F%20WIP-orange.svg)](https://github.com/benzjeremy/ollama-fleet-manager)
+
+> [!IMPORTANT]
+> ### 🚧 Pre-Release / Active Development Notice
+> **This software is not yet finished and is actively being worked on.**  
+> All releases, builds, and versions are **Pre-Releases** (Work in Progress), even if originally tagged without a pre-release flag. Telemetry algorithms, task routers, and APIs are under continuous development.
 
 Intelligent, resource-efficient fleet manager and dynamic model router for [Ollama](https://ollama.com). Built in pure Go with hardware telemetry sensors (CPU, RAM, GPU VRAM), automated OOM prevention, and uncompromising **Zero-Dummy-Security**.
 
